@@ -2,6 +2,7 @@
 
 import * as Types from '../../typenames';
 import { WebviewExtension } from '../webview_extension';
+import { CUBEMAP_RESOLUTION } from '../../constants';
 
 export class BuffersInitExtension implements WebviewExtension {
     private content: string;
@@ -19,14 +20,14 @@ export class BuffersInitExtension implements WebviewExtension {
             if (buffer !== buffers[buffers.length - 1]) {
                 if (buffer.IsCubemapBuffer) {
                     // Create a WebGLCubeRenderTarget for cubemap buffers
-                    target = 'new THREE.WebGLCubeRenderTarget(1024, { type: framebufferType })';
+                    target = `new THREE.WebGLCubeRenderTarget(${CUBEMAP_RESOLUTION}, { type: framebufferType })`;
                 } else {
                     target = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
                 }
             }
             if (buffer.UsesSelf) {
                 if (buffer.IsCubemapBuffer) {
-                    pingPongTarget = 'new THREE.WebGLCubeRenderTarget(1024, { type: framebufferType })';
+                    pingPongTarget = `new THREE.WebGLCubeRenderTarget(${CUBEMAP_RESOLUTION}, { type: framebufferType })`;
                 } else {
                     pingPongTarget = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
                 }

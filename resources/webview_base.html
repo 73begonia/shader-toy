@@ -262,6 +262,7 @@
     let gl = glContextInfo.gl;
     let isWebGL2 = glContextInfo.isWebGL2;
     const WEBGL2_EXTRA_SHADER_LINES = <!-- WebGL2 Extra Shader Lines -->;
+    const CUBEMAP_RESOLUTION = <!-- Cubemap Resolution -->;
     let supportsFloatFramebuffer = (gl.getExtension('EXT_color_buffer_float') != null) || (gl.getExtension('WEBGL_color_buffer_float') != null);
     let supportsHalfFloatFramebuffer = (gl.getExtension('EXT_color_buffer_half_float') != null);
     let framebufferType = THREE.UnsignedByteType;
@@ -441,7 +442,7 @@
             if (buffer.IsCubemapBuffer) {
                 for (let face = 0; face < 6; face++) {
                     buffer.Shader.uniforms['iCubeFace'].value = face;
-                    buffer.Shader.uniforms['iResolution'].value = new THREE.Vector3(1024, 1024, 1);
+                    buffer.Shader.uniforms['iResolution'].value = new THREE.Vector3(CUBEMAP_RESOLUTION, CUBEMAP_RESOLUTION, 1);
                     renderer.setRenderTarget(buffer.Target, face);
                     renderer.render(scene, camera);
                 }
