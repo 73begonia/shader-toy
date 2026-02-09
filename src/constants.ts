@@ -8,3 +8,6 @@ export const SELF_SOURCE_ID = 65535;
 // by the webview runtime (e.g. output declaration and compatibility shims). We compensate
 // for this when mapping error logs back to the original sources.
 export const WEBGL2_EXTRA_SHADER_LINES = 16;
+
+// Cubemap buffers use a fixed resolution (matching Shadertoy's Cubemap A specification)
+export const CUBEMAP_RESOLUTION = 1024;

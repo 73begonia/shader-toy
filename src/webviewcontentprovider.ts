@@ -14,8 +14,9 @@ import { InitialMouseExtension } from './extensions/initial_mouse_extension';
 import { InitialNormalizedMouseExtension } from './extensions/initial_normalized_mouse_extension';
 import { InitialFlyControlPositionExtension } from './extensions/initial_fly_control_position_extension';
 import { InitialFlyControlRotationExtension } from './extensions/initial_fly_control_rotation_extension';
-import { WEBGL2_EXTRA_SHADER_LINES } from './constants';
+import { WEBGL2_EXTRA_SHADER_LINES, CUBEMAP_RESOLUTION } from './constants';
 import { Webgl2ExtraShaderLinesExtension } from './extensions/webgl2_extra_shader_lines_extension';
+import { CubemapResolutionExtension } from './extensions/cubemap_resolution_extension';
 
 import { ForcedAspectExtension } from './extensions/forced_aspect_extension';
 import { GlslVersionExtension, type GlslVersionSetting } from './extensions/glsl_version_extension';
@@ -251,6 +252,11 @@ export class WebviewContentProvider {
         // WebGL2 extra line count (used for error line mapping)
         const webgl2ExtraShaderLinesExtension = new Webgl2ExtraShaderLinesExtension(WEBGL2_EXTRA_SHADER_LINES);
         this.webviewAssembler.addReplaceModule(webgl2ExtraShaderLinesExtension, 'const WEBGL2_EXTRA_SHADER_LINES = <!-- WebGL2 Extra Shader Lines -->;', '<!-- WebGL2 Extra Shader Lines -->');
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Cubemap resolution constant
+        const cubemapResolutionExtension = new CubemapResolutionExtension(CUBEMAP_RESOLUTION);
+        this.webviewAssembler.addReplaceModule(cubemapResolutionExtension, 'const CUBEMAP_RESOLUTION = <!-- Cubemap Resolution -->;', '<!-- Cubemap Resolution -->');
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         // Keyboard
