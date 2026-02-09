@@ -31,6 +31,7 @@ uniform sampler2D   iChannel8;
 uniform sampler2D   iChannel9;
 uniform sampler2D   iKeyboard;
 uniform float       iSampleRate;
+uniform int         iCubeFace;
 
 #define iGlobalTime iTime
 #define iGlobalFrame iFrame

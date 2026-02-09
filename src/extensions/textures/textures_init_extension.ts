@@ -588,16 +588,20 @@ buffers[${i}].Shader.uniforms.iChannel${channel} = { type: 't', value: ${texture
                         const minFilter = convertMinFilter(texture.Min);
                         const wrapMode = convertWrapMode(texture.Wrap);
             
+                        // Check if the referenced buffer is a cubemap buffer
+                        const isCubemapBuffer = `buffers[${textureBufferIndex}].IsCubemapBuffer`;
                         textureLoadScript = `\
 (() => {
     let texture = buffers[${textureBufferIndex}].Target.texture;
     texture.magFilter = ${magFilter};
     texture.minFilter = ${minFilter};
-    texture.wrapS = ${wrapMode};
-    texture.wrapT = ${wrapMode};
+    if (!${isCubemapBuffer}) {
+        texture.wrapS = ${wrapMode};
+        texture.wrapT = ${wrapMode};
+    }
     return texture;
 })()`;
-                        textureSizeScript = `new THREE.Vector3(buffers[${textureBufferIndex}].Target.width, buffers[${textureBufferIndex}].Target.height, 1)`;
+                        textureSizeScript = `(${isCubemapBuffer} ? new THREE.Vector3(1024, 1024, 6) : new THREE.Vector3(buffers[${textureBufferIndex}].Target.width, buffers[${textureBufferIndex}].Target.height, 1))`;
                     }
                     else if (localPath !== undefined && texture.Mag !== undefined && texture.Min !== undefined && texture.Wrap !== undefined) {
                         const resolvedPath = makeAvailableResource(localPath);

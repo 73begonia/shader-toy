@@ -17,10 +17,19 @@ export class BuffersInitExtension implements WebviewExtension {
             let target = 'null';
             let pingPongTarget = 'null';
             if (buffer !== buffers[buffers.length - 1]) {
-                target = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
+                if (buffer.IsCubemapBuffer) {
+                    // Create a WebGLCubeRenderTarget for cubemap buffers
+                    target = 'new THREE.WebGLCubeRenderTarget(1024, { type: framebufferType })';
+                } else {
+                    target = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
+                }
             }
             if (buffer.UsesSelf) {
-                pingPongTarget = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
+                if (buffer.IsCubemapBuffer) {
+                    pingPongTarget = 'new THREE.WebGLCubeRenderTarget(1024, { type: framebufferType })';
+                } else {
+                    pingPongTarget = 'new THREE.WebGLRenderTarget(resolution.x, resolution.y, { type: framebufferType })';
+                }
             }
 
             this.content += `\
@@ -36,6 +45,7 @@ buffers.push({
     PingPongTarget: ${pingPongTarget},
     PingPongChannel: ${buffer.SelfChannel},
     Dependents: ${JSON.stringify(buffer.Dependents)},
+    IsCubemapBuffer: ${buffer.IsCubemapBuffer || false},
     Shader: new THREE.ShaderMaterial({
         glslVersion: glslUseVersion3 ? THREE.GLSL3 : THREE.GLSL1,
         vertexShader: ${buffer.VertexCode !== undefined ? `prepareVertexShader(document.getElementById(${JSON.stringify(buffer.Name + '_vertex')}).textContent)` : 'undefined'},
@@ -51,6 +61,7 @@ buffers.push({
             iMouseButton: { type: 'v2', value: mouseButton },
             iViewMatrix: {type: 'm44', value: new THREE.Matrix4() },
             iChannelResolution: { type: 'v3v', value: Array(10).fill(new THREE.Vector3(0,0,0)) },
+            iCubeFace: { type: 'i', value: 0 },
 
             iDate: { type: 'v4', value: date },
             iSampleRate: { type: 'f', value: audioContext.sampleRate },

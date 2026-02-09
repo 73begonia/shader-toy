@@ -85,6 +85,18 @@ export class BufferProvider {
             buffer.SelfChannel = selfChannel;
         }
 
+        // Mark buffers as cubemap buffers if they are referenced as CubeMap type
+        for (let i = 0; i < buffers.length; i++) {
+            const buffer = buffers[i];
+            for (const texture of buffer.TextureInputs) {
+                if (texture.Buffer !== undefined && texture.BufferIndex !== undefined && 
+                    texture.Type === Types.TextureType.CubeMap) {
+                    const referencedBuffer = buffers[texture.BufferIndex];
+                    referencedBuffer.IsCubemapBuffer = true;
+                }
+            }
+        }
+
         // Resolve dependencies between passes
         for (let i = 0; i < buffers.length; i++) {
             const buffer = buffers[i];

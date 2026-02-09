@@ -436,8 +436,20 @@
             buffer.Shader.uniforms['mouse'].value = normalizedMouse;
 
             quad.material = buffer.Shader;
-            renderer.setRenderTarget(buffer.Target);
-            renderer.render(scene, camera);
+            
+            // Handle cubemap buffers - render 6 faces
+            if (buffer.IsCubemapBuffer) {
+                for (let face = 0; face < 6; face++) {
+                    buffer.Shader.uniforms['iCubeFace'].value = face;
+                    buffer.Shader.uniforms['iResolution'].value = new THREE.Vector3(1024, 1024, 1);
+                    renderer.setRenderTarget(buffer.Target, face);
+                    renderer.render(scene, camera);
+                }
+            } else {
+                buffer.Shader.uniforms['iCubeFace'].value = 0;
+                renderer.setRenderTarget(buffer.Target);
+                renderer.render(scene, camera);
+            }
         }
         
         // Uniforms Update
@@ -497,11 +509,14 @@
         canvas.style.top = `${(window.innerHeight - resolution.y*zoom) / 2}px`;
 
         for (let buffer of buffers) {
-            if (buffer.Target) {
-                buffer.Target.setSize(resolution.x, resolution.y);
-            }
-            if (buffer.PingPongTarget) {
-                buffer.PingPongTarget.setSize(resolution.x, resolution.y);
+            // Skip resizing for cubemap buffers (fixed at 1024x1024)
+            if (!buffer.IsCubemapBuffer) {
+                if (buffer.Target) {
+                    buffer.Target.setSize(resolution.x, resolution.y);
+                }
+                if (buffer.PingPongTarget) {
+                    buffer.PingPongTarget.setSize(resolution.x, resolution.y);
+                }
             }
         }
         renderer.setSize(resolution.x, resolution.y, false);

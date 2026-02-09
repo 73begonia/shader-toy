@@ -108,6 +108,7 @@ export type BufferDefinition = {
     Includes: IncludeDefinition[],
     UsesKeyboard?: boolean,
     UsesFirstPersonControls?: boolean,
+    IsCubemapBuffer?: boolean,
 };
 
 export type Diagnostic = {
